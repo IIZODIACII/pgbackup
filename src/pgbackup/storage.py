@@ -1,8 +1,8 @@
-def local(infile, outfile):
-    outfile.write(infile.read())
-    outfile.close()
-    infile.close()
+def local(src_file, destination_file):
+    destination_file.write(src_file.read())
+    destination_file.close()
+    src_file.close()
 
 
-def s3(client, infile, bucket, name):
-    client.upload_fileobj(infile, bucket, name)
+def s3(client, src_file, bucket, name):
+    client.upload_fileobj(src_file, bucket, name)
