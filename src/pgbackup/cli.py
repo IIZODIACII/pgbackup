@@ -23,20 +23,22 @@ def create_parser():
                         required=True)
     return parser
 
-# def main():
-#     import time
-#     import boto3
-#     from pgbackup import pgdump, storage
 
-#     args = create_parser().parse_args()
-#     dump = pgdump.dump(args.url)
-#     if args.driver == 's3':
-#         client = boto3.client('s3')
-#         timestamp = time.strftime("%Y-%m-%dT%H:%M", time.localtime())
-#         file_name = pgdump.dump_file_name(args.url, timestamp)
-#         print("Backing database up to %s in S3 as %s" % (args.destination, file_name))
-#         storage.s3(client, dump.stdout, args.destination, file_name)
-#     else:
-#         outfile = open(args.destination, 'w+b')
-#         print("Backing database up locally to %s" % outfile.name)
-#         storage.local(dump.stdout, outfile)
+def main():
+    import time
+    import boto3
+    from pgbackup import pgdump, storage
+
+    args = create_parser().parse_args()
+    dump = pgdump.dump(args.url)
+    if args.driver == 's3':
+        client = boto3.client('s3')
+        timestamp = time.strftime("%Y-%m-%dT%H-%M", time.localtime())
+        file_name = pgdump.dump_file_name(args.url, timestamp)
+        print(
+            f"Backing database up to {args.destination} in S3 as {file_name}")
+        storage.s3(client, dump.stdout, args.destination, file_name)
+    else:
+        outfile = open(args.destination, 'w+b')
+        print(f"Backing database up locally to {outfile.name}")
+        storage.local(dump.stdout, outfile)
